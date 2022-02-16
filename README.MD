@@ -20,6 +20,9 @@ $ yarn
 Run server
 $ yarn start
 
-Access GraphiQL to make tests on api on;
+Access GraphiQL to make tests on API
 $ http://localhost:3000/graphql
+
+View database interface
+$ npx prisma studio
 ```

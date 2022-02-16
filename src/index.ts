@@ -9,6 +9,7 @@ import {
   sendResult,
 } from "graphql-helix";
 
+import { contextFactory } from "./context";
 import { schema } from "./schema";
 
 async function main() {
@@ -42,6 +43,7 @@ async function main() {
         request,
         schema,
         operationName,
+        contextFactory,
         query,
         variables,
       });
