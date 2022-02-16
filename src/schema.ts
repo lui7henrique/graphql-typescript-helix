@@ -1,7 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import typeDefs from "./schema.graphql";
-import { Link, User } from "@prisma/client";
+import { Link, Prisma, User } from "@prisma/client";
 import { GraphQLContext } from "./context";
 import { sign } from "jsonwebtoken";
 import { APP_SECRET } from "./auth";
@@ -10,8 +10,41 @@ import { PubSubChannels } from "./pubsub";
 const resolvers = {
   Query: {
     info: () => "oiiiiiii",
-    feed: async (parent: unknown, args: {}, context: GraphQLContext) => {
-      return context.prisma.link.findMany();
+    feed: async (
+      parent: unknown,
+      args: {
+        filter?: string;
+        skip?: number;
+        take?: number;
+        orderBy?: {
+          description?: Prisma.SortOrder;
+          url?: Prisma.SortOrder;
+          createdAt?: Prisma.SortOrder;
+        };
+      },
+      context: GraphQLContext
+    ) => {
+      const where = args.filter
+        ? {
+            OR: [
+              { description: { contains: args.filter } },
+              { url: { contains: args.filter } },
+            ],
+          }
+        : {};
+
+      const totalCount = await context.prisma.link.count({ where });
+      const links = await context.prisma.link.findMany({
+        where,
+        skip: args.skip,
+        take: args.take,
+        orderBy: args.orderBy,
+      });
+
+      return {
+        count: totalCount,
+        links,
+      };
     },
     me: (parent: unknown, args: {}, context: GraphQLContext) => {
       if (context.currentUser === null) {
