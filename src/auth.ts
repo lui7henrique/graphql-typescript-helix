@@ -9,13 +9,9 @@ export async function authenticateUser(
   request: FastifyRequest
 ): Promise<User | null> {
   if (request?.headers?.authorization) {
-    // 1
     const token = request.headers.authorization.split(" ")[1];
-    // 2
     const tokenPayload = verify(token, APP_SECRET) as JwtPayload;
-    // 3
     const userId = tokenPayload.userId;
-    // 4
     return await prisma.user.findUnique({ where: { id: userId } });
   }
 
