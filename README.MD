@@ -5,6 +5,7 @@
 - [GraphQL](https://graphql.org/)
 - [Fastify](https://www.fastify.io/)
 - [GraphQL Helix](https://github.com/contra/graphql-helix)
+- [Prisma](https://www.prisma.io/)
 
 # 💻 Requirements
 
